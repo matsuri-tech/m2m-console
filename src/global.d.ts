@@ -19,6 +19,7 @@ declare module "*.md" {
 declare namespace NodeJS {
     interface ProcessEnv {
         readonly NODE_ENV: "development" | "production" | "test"
+        readonly M2M_USERS_API_ROOT: string
         [key: string]: string
         /**
          * process.envを利用するときは以下に追記する

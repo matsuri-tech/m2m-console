@@ -148,5 +148,10 @@
             "yarn lint:fix:json",
             "git add"
         ]
+    },
+    "dependencies": {
+        "core-js": "3.4.0",
+        "matsuri-ui": "git+https://36efe9e22f78ef3968f092fd5f39350c695e9f61:x-oauth-basic@github.com/matsuri-tech/matsuri-ui#production",
+        "styled-components": "^4.4.1"
     }
 }
