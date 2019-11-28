@@ -6,12 +6,12 @@ export interface UseActivateReq {
     userId: string
 }
 
-export const useActivate = () => {
+export const useUserActivate = () => {
     const [fetching, setFetching] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
     const [isSuccessful, setIsSuccessful] = useState(false)
 
-    const handleSubmit = useCallback(
+    const makeHandleSubmit = useCallback(
         (userId: string, activationToken: string) => async () => {
             setFetching(true)
             try {
@@ -48,7 +48,7 @@ export const useActivate = () => {
 
     return {
         fetching,
-        handleSubmit,
+        makeHandleSubmit,
         handleClearError,
         errorMessage,
         isSuccessful

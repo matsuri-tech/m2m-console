@@ -9701,9 +9701,10 @@ mathml-tag-names@^2.1.1:
   resolved "https://registry.yarnpkg.com/mathml-tag-names/-/mathml-tag-names-2.1.1.tgz#6dff66c99d55ecf739ca53c492e626f1d12a33cc"
   integrity sha512-pWB896KPGSGkp1XtyzRBftpTzwSOL0Gfk0wLvxt4f2mgzjY19o0LxJ3U25vNWTzsh7da+KTbuXQoQ3lOJZ8WHw==
 
-"matsuri-ui@git+https://36efe9e22f78ef3968f092fd5f39350c695e9f61:x-oauth-basic@github.com/matsuri-tech/matsuri-ui#production":
-  version "5.10.5"
-  resolved "git+https://36efe9e22f78ef3968f092fd5f39350c695e9f61:x-oauth-basic@github.com/matsuri-tech/matsuri-ui#00aa7d235afb0f0373caf8f1912a7d057af977a3"
+matsuri-ui@^5.14.2:
+  version "5.14.2"
+  resolved "https://registry.yarnpkg.com/matsuri-ui/-/matsuri-ui-5.14.2.tgz#5bf542bb4fe52c84ba1fbc3951ca1848d40e6720"
+  integrity sha512-ZHhNK/+VduJJZ3cn3fJUeU8+4KPQH127RJj/m6aVy9Cspes8L98KEEOX0RTf0TYlp24n0AbpCG0WuLRo7Z+I5g==
 
 md5.js@^1.3.4:
   version "1.3.5"

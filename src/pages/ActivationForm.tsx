@@ -1,9 +1,9 @@
 import { ActivationFinished } from "./ActivationFinished"
 import { Button, Layout, Modal, Typography } from "matsuri-ui"
-import { useActivate } from "@/hooks/useActivate"
 import { useEffect } from "react"
 import { useHistory } from "react-router-dom"
 import { useQuery } from "@/hooks/useQuery"
+import { useUserActivate } from "@/hooks/useUserActivate"
 
 const sx = {
     root: {
@@ -30,14 +30,16 @@ export const ActivationForm: Page = () => {
     const {
         fetching,
         errorMessage,
-        handleSubmit,
+        makeHandleSubmit,
         handleClearError,
         isSuccessful
-    } = useActivate()
+    } = useUserActivate()
 
     const query = useQuery()
     const activationToken = query.get("activation_token") || ""
     const userId = query.get("user_id") || ""
+
+    const handleSubmit = makeHandleSubmit(userId || "", activationToken || "")
 
     const history = useHistory()
 
@@ -78,10 +80,7 @@ export const ActivationForm: Page = () => {
                     backdrop
                 />
             )}
-            <button
-                onClick={handleSubmit(userId, activationToken)}
-                disabled={fetching}
-            >
+            <button onClick={handleSubmit} disabled={fetching}>
                 こちらをクリックし、m2mのユーザーを利用可能にしてください
             </button>
         </>
