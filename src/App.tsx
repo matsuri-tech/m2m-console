@@ -1,5 +1,7 @@
 import { ActivationFinished } from "./pages/ActivationFinished"
 import { ActivationForm } from "./pages/ActivationForm"
+import { ResetPasswordFinished } from "./pages/ResetPasswordFinished"
+import { ResetPasswordForm } from "./pages/ResetPasswordForm"
 import { Route, BrowserRouter as Router, Switch } from "react-router-dom"
 import styled from "styled-components"
 
@@ -17,6 +19,12 @@ export const App = () => {
                     </Route>
                     <Route path={ActivationFinished.path}>
                         <ActivationFinished />
+                    </Route>
+                    <Route path={ResetPasswordForm.path}>
+                        <ResetPasswordForm />
+                    </Route>
+                    <Route path={ResetPasswordFinished.path}>
+                        <ResetPasswordFinished />
                     </Route>
                 </Switch>
             </Main>

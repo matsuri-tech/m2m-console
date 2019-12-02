@@ -1,29 +1,26 @@
 import * as apiValidation from "@/api/validation"
 import { useCallback, useState } from "react"
 
-export interface UseActivateReq {
-    activationToken: string
-    userId: string
-}
-
-export const useUserActivate = () => {
+export const useResetPassword = () => {
     const [fetching, setFetching] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
     const [isSuccessful, setIsSuccessful] = useState(false)
+    const [password, setPassword] = useState("")
 
     const makeHandleSubmit = useCallback(
-        (userId: string, activationToken: string) => async () => {
+        (userId: string, resetToken: string) => async () => {
             setFetching(true)
             try {
                 const response: ActivationResponse = await (
                     await fetch(
-                        `${process.env.M2M_USERS_API_ROOT}/users/activate`,
+                        `${process.env.M2M_USERS_API_ROOT}/users/reset_password`,
                         {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify({
-                                activationToken,
-                                userId
+                                resetToken,
+                                userId,
+                                password
                             })
                         }
                     )
@@ -40,7 +37,7 @@ export const useUserActivate = () => {
                 setIsSuccessful(false)
             }
         },
-        [setFetching]
+        [setFetching, password]
     )
 
     const handleClearError = useCallback(() => {
@@ -52,6 +49,8 @@ export const useUserActivate = () => {
         makeHandleSubmit,
         handleClearError,
         errorMessage,
-        isSuccessful
+        isSuccessful,
+        password,
+        setPassword
     }
 }
