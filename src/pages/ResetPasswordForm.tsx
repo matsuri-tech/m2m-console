@@ -1,5 +1,5 @@
-import { ActivationFinished } from "./ActivationFinished"
 import { Button, Layout, Modal, TextField, Typography } from "matsuri-ui"
+import { ResetPasswordFinished } from "./ResetPasswordFinished"
 import { useEffect } from "react"
 import { useHistory } from "react-router-dom"
 import { useQuery } from "@/hooks/useQuery"
@@ -47,7 +47,7 @@ export const ResetPasswordForm: Page = () => {
 
     useEffect(() => {
         if (isSuccessful) {
-            history.push(ActivationFinished.path)
+            history.push(ResetPasswordFinished.path)
         }
     }, [isSuccessful, history])
 
