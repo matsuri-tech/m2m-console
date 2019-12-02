@@ -37,6 +37,7 @@ export const useUserActivate = () => {
             } catch (e) {
                 setErrorMessage(e.message)
                 setFetching(false)
+                setIsSuccessful(false)
             }
         },
         [setFetching]

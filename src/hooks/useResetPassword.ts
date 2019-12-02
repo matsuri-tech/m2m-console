@@ -34,6 +34,7 @@ export const useResetPassword = () => {
             } catch (e) {
                 setErrorMessage(e.message)
                 setFetching(false)
+                setIsSuccessful(false)
             }
         },
         [setFetching, password]
