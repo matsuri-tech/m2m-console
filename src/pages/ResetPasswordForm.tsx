@@ -33,8 +33,8 @@ export const ResetPasswordForm: Page = () => {
         makeHandleSubmit,
         handleClearError,
         isSuccessful,
-        password,
-        setPassword
+        newPassword,
+        setNewPassword
     } = useResetPassword()
 
     const query = useQuery()
@@ -84,8 +84,8 @@ export const ResetPasswordForm: Page = () => {
             )}
 
             <TextField
-                onChange={setPassword}
-                value={password}
+                onChange={setNewPassword}
+                value={newPassword}
                 type="password"
             />
 

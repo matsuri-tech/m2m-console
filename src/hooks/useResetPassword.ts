@@ -5,7 +5,7 @@ export const useResetPassword = () => {
     const [fetching, setFetching] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
     const [isSuccessful, setIsSuccessful] = useState(false)
-    const [password, setPassword] = useState("")
+    const [newPassword, setNewPassword] = useState("")
 
     const makeHandleSubmit = useCallback(
         (userId: string, resetToken: string) => async () => {
@@ -20,7 +20,7 @@ export const useResetPassword = () => {
                             body: JSON.stringify({
                                 resetToken,
                                 userId,
-                                password
+                                newPassword
                             })
                         }
                     )
@@ -37,7 +37,7 @@ export const useResetPassword = () => {
                 setIsSuccessful(false)
             }
         },
-        [setFetching, password]
+        [setFetching, newPassword]
     )
 
     const handleClearError = useCallback(() => {
@@ -50,7 +50,7 @@ export const useResetPassword = () => {
         handleClearError,
         errorMessage,
         isSuccessful,
-        password,
-        setPassword
+        newPassword,
+        setNewPassword
     }
 }
