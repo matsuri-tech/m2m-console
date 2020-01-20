@@ -1,8 +1,4 @@
 import { Button, Layout, Modal, TextField, Typography } from "matsuri-ui"
-import { ResetPasswordFinished } from "./ResetPasswordFinished"
-import { useEffect } from "react"
-import { useHistory } from "react-router-dom"
-import { useQuery } from "@/hooks/useQuery"
 import { useResetPassword } from "@/hooks/useResetPassword"
 
 const sx = {
@@ -30,26 +26,11 @@ export const ResetPasswordForm: Page = () => {
     const {
         fetching,
         errorMessage,
-        makeHandleSubmit,
+        handleSubmit,
         handleClearError,
-        isSuccessful,
         newPassword,
         setNewPassword
     } = useResetPassword()
-
-    const query = useQuery()
-    const resetToken = query.get("reset_token") || ""
-    const userId = query.get("user_id") || ""
-
-    const handleSubmit = makeHandleSubmit(userId, resetToken)
-
-    const history = useHistory()
-
-    useEffect(() => {
-        if (isSuccessful) {
-            history.push(ResetPasswordFinished.path)
-        }
-    }, [isSuccessful, history])
 
     return (
         <>

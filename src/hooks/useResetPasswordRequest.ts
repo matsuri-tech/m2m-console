@@ -1,11 +1,21 @@
 import * as apiValidation from "@/api/validation"
-import { useCallback, useState } from "react"
+import { ResetPasswordRequestFinished } from "@/pages/ResetPasswordRequestFinished"
+import { useCallback, useEffect, useState } from "react"
+import { useHistory } from "react-router-dom"
 
 export const useResetPasswordRequest = () => {
     const [fetching, setFetching] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
     const [isSuccessful, setIsSuccessful] = useState(false)
     const [email, setEmail] = useState("")
+
+    const history = useHistory()
+
+    useEffect(() => {
+        if (isSuccessful) {
+            history.push(ResetPasswordRequestFinished.path)
+        }
+    }, [isSuccessful, history])
 
     const handleSubmit = useCallback(async () => {
         setFetching(true)
@@ -44,7 +54,6 @@ export const useResetPasswordRequest = () => {
         handleSubmit,
         handleClearError,
         errorMessage,
-        isSuccessful,
         email,
         setEmail
     }
