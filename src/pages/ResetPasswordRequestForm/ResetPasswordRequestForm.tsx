@@ -1,9 +1,5 @@
-import { ActivationFinished } from "./ActivationFinished"
-import { Button, Layout, Modal, Typography } from "matsuri-ui"
-import { useEffect } from "react"
-import { useHistory } from "react-router-dom"
-import { useQuery } from "@/hooks/useQuery"
-import { useUserActivate } from "@/hooks/useUserActivate"
+import { Button, Layout, Modal, TextField, Typography } from "matsuri-ui"
+import { useResetPasswordRequest } from "@/pages/ResetPasswordRequestForm/useResetPasswordRequest"
 
 const sx = {
     root: {
@@ -26,32 +22,19 @@ const sx = {
     }
 } as const
 
-export const ActivationForm: Page = () => {
+export const ResetPasswordRequestForm: Page = () => {
     const {
         fetching,
         errorMessage,
-        makeHandleSubmit,
+        handleSubmit,
         handleClearError,
-        isSuccessful
-    } = useUserActivate()
-
-    const query = useQuery()
-    const activationToken = query.get("activation_token") || ""
-    const userId = query.get("user_id") || ""
-
-    const handleSubmit = makeHandleSubmit(userId || "", activationToken || "")
-
-    const history = useHistory()
-
-    useEffect(() => {
-        if (isSuccessful) {
-            history.push(ActivationFinished.path)
-        }
-    }, [isSuccessful, history])
+        email,
+        setEmail
+    } = useResetPasswordRequest()
 
     return (
         <>
-            <h2>Activation</h2>
+            <h2>パスワードの再発行</h2>
             {errorMessage && (
                 <Modal
                     style={sx.modal}
@@ -80,11 +63,19 @@ export const ActivationForm: Page = () => {
                     backdrop
                 />
             )}
-            <button onClick={handleSubmit} disabled={fetching}>
-                こちらをクリックし、m2mのユーザーを利用可能にしてください
-            </button>
+
+            <TextField
+                onChange={setEmail}
+                value={email}
+                type="email"
+                label="パスワードを再発行したいアカウントのEmailをご入力ください"
+            />
+
+            <Button onClick={handleSubmit} disabled={fetching}>
+                送信
+            </Button>
         </>
     )
 }
 
-ActivationForm.path = "/activation_form"
+ResetPasswordRequestForm.path = "/reset_password_request_form"

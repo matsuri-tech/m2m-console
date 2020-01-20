@@ -1,9 +1,9 @@
-import { Button, Layout, Modal, TextField, Typography } from "matsuri-ui"
-import { ResetPasswordFinished } from "./ResetPasswordFinished"
+import { ActivationFinished } from "./ActivationFinished"
+import { Button, Layout, Modal, Typography } from "matsuri-ui"
 import { useEffect } from "react"
 import { useHistory } from "react-router-dom"
 import { useQuery } from "@/hooks/useQuery"
-import { useResetPassword } from "@/hooks/useResetPassword"
+import { useUserActivate } from "@/pages/ActivationForm/useActivationForm"
 
 const sx = {
     root: {
@@ -26,34 +26,32 @@ const sx = {
     }
 } as const
 
-export const ResetPasswordForm: Page = () => {
+export const ActivationForm: Page = () => {
     const {
         fetching,
         errorMessage,
         makeHandleSubmit,
         handleClearError,
-        isSuccessful,
-        newPassword,
-        setNewPassword
-    } = useResetPassword()
+        isSuccessful
+    } = useUserActivate()
 
     const query = useQuery()
-    const resetToken = query.get("reset_token") || ""
+    const activationToken = query.get("activation_token") || ""
     const userId = query.get("user_id") || ""
 
-    const handleSubmit = makeHandleSubmit(userId, resetToken)
+    const handleSubmit = makeHandleSubmit(userId || "", activationToken || "")
 
     const history = useHistory()
 
     useEffect(() => {
         if (isSuccessful) {
-            history.push(ResetPasswordFinished.path)
+            history.push(ActivationFinished.path)
         }
     }, [isSuccessful, history])
 
     return (
         <>
-            <h2>Reset Password</h2>
+            <h2>Activation</h2>
             {errorMessage && (
                 <Modal
                     style={sx.modal}
@@ -82,18 +80,11 @@ export const ResetPasswordForm: Page = () => {
                     backdrop
                 />
             )}
-
-            <TextField
-                onChange={setNewPassword}
-                value={newPassword}
-                type="password"
-            />
-
-            <Button onClick={handleSubmit} disabled={fetching}>
-                送信
-            </Button>
+            <button onClick={handleSubmit} disabled={fetching}>
+                こちらをクリックし、m2mのユーザーを利用可能にしてください
+            </button>
         </>
     )
 }
 
-ResetPasswordForm.path = "/reset_password_form"
+ActivationForm.path = "/activation_form"
