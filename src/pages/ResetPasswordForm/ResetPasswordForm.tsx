@@ -1,9 +1,5 @@
-import { ActivationFinished } from "./ActivationFinished"
-import { Button, Layout, Modal, Typography } from "matsuri-ui"
-import { useEffect } from "react"
-import { useHistory } from "react-router-dom"
-import { useQuery } from "@/hooks/useQuery"
-import { useUserActivate } from "@/hooks/useUserActivate"
+import { Button, Layout, Modal, TextField, Typography } from "matsuri-ui"
+import { useResetPassword } from "@/pages/ResetPasswordForm/useResetPassword"
 
 const sx = {
     root: {
@@ -26,32 +22,19 @@ const sx = {
     }
 } as const
 
-export const ActivationForm: Page = () => {
+export const ResetPasswordForm: Page = () => {
     const {
         fetching,
         errorMessage,
-        makeHandleSubmit,
+        handleSubmit,
         handleClearError,
-        isSuccessful
-    } = useUserActivate()
-
-    const query = useQuery()
-    const activationToken = query.get("activation_token") || ""
-    const userId = query.get("user_id") || ""
-
-    const handleSubmit = makeHandleSubmit(userId || "", activationToken || "")
-
-    const history = useHistory()
-
-    useEffect(() => {
-        if (isSuccessful) {
-            history.push(ActivationFinished.path)
-        }
-    }, [isSuccessful, history])
+        newPassword,
+        setNewPassword
+    } = useResetPassword()
 
     return (
         <>
-            <h2>Activation</h2>
+            <h2>パスワードの入力</h2>
             {errorMessage && (
                 <Modal
                     style={sx.modal}
@@ -80,11 +63,20 @@ export const ActivationForm: Page = () => {
                     backdrop
                 />
             )}
-            <button onClick={handleSubmit} disabled={fetching}>
-                こちらをクリックし、m2mのユーザーを利用可能にしてください
-            </button>
+
+            <TextField
+                onChange={setNewPassword}
+                value={newPassword}
+                type="password"
+                label="新しいパスワードをご入力ください"
+                autoComplete="new-password"
+            />
+
+            <Button onClick={handleSubmit} disabled={fetching}>
+                送信
+            </Button>
         </>
     )
 }
 
-ActivationForm.path = "/activation_form"
+ResetPasswordForm.path = "/reset_password_form"

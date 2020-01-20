@@ -1,33 +1,40 @@
 import * as apiValidation from "@/api/validation"
-import { ResetPasswordRequestFinished } from "@/pages/ResetPasswordRequestFinished"
+import { ResetPasswordFinished } from "@/pages/ResetPasswordForm/ResetPasswordFinished"
 import { useCallback, useEffect, useState } from "react"
 import { useHistory } from "react-router-dom"
+import { useQuery } from "../../hooks/useQuery"
 
-export const useResetPasswordRequest = () => {
+export const useResetPassword = () => {
     const [fetching, setFetching] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
     const [isSuccessful, setIsSuccessful] = useState(false)
-    const [email, setEmail] = useState("")
+    const [newPassword, setNewPassword] = useState("")
 
     const history = useHistory()
 
     useEffect(() => {
         if (isSuccessful) {
-            history.push(ResetPasswordRequestFinished.path)
+            history.push(ResetPasswordFinished.path)
         }
     }, [isSuccessful, history])
+
+    const query = useQuery()
+    const resetToken = query.get("reset_token") || ""
+    const userId = query.get("user_id") || ""
 
     const handleSubmit = useCallback(async () => {
         setFetching(true)
         try {
-            const response: ResetPasswordEmailResponse = await (
+            const response: ActivationResponse = await (
                 await fetch(
-                    `${process.env.M2M_USERS_API_ROOT}/users/reset_password_email`,
+                    `${process.env.M2M_USERS_API_ROOT}/users/reset_password`,
                     {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
-                            email
+                            resetToken,
+                            userId,
+                            newPassword
                         })
                     }
                 )
@@ -43,7 +50,7 @@ export const useResetPasswordRequest = () => {
             setFetching(false)
             setIsSuccessful(false)
         }
-    }, [setFetching, email])
+    }, [setFetching, newPassword, userId, resetToken])
 
     const handleClearError = useCallback(() => {
         setErrorMessage("")
@@ -54,7 +61,7 @@ export const useResetPasswordRequest = () => {
         handleSubmit,
         handleClearError,
         errorMessage,
-        email,
-        setEmail
+        newPassword,
+        setNewPassword
     }
 }

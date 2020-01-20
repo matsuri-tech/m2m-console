@@ -1,5 +1,5 @@
 import { Button, Layout, Modal, TextField, Typography } from "matsuri-ui"
-import { useResetPasswordRequest } from "@/hooks/useResetPasswordRequest"
+import { useResetPasswordRequest } from "@/pages/ResetPasswordRequestForm/useResetPasswordRequest"
 
 const sx = {
     root: {
