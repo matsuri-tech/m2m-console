@@ -1,47 +1,59 @@
 import * as apiValidation from "@/api/validation"
-import { useCallback, useState } from "react"
+import { ActivationFinished } from "./ActivationFinished"
+import { useCallback, useEffect, useState } from "react"
+import { useHistory } from "react-router-dom"
+import { useQuery } from "@/hooks/useQuery"
 
 export interface UseActivateReq {
     activationToken: string
     userId: string
 }
 
-export const useUserActivate = () => {
+export const useUserActivationForm = () => {
     const [fetching, setFetching] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
     const [isSuccessful, setIsSuccessful] = useState(false)
 
-    const makeHandleSubmit = useCallback(
-        (userId: string, activationToken: string) => async () => {
-            setFetching(true)
-            try {
-                const response: ActivationResponse = await (
-                    await fetch(
-                        `${process.env.M2M_USERS_API_ROOT}/users/activate`,
-                        {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({
-                                activationToken,
-                                userId
-                            })
-                        }
-                    )
-                ).json()
+    const query = useQuery()
+    const activationToken = query.get("activation_token") || ""
+    const userId = query.get("user_id") || ""
 
-                if (apiValidation.isError(response)) {
-                    throw new Error((response as ErrorResponse).errorType)
-                }
-                setFetching(false)
-                setIsSuccessful(true)
-            } catch (e) {
-                setErrorMessage(e.message)
-                setFetching(false)
-                setIsSuccessful(false)
+    const history = useHistory()
+
+    useEffect(() => {
+        if (isSuccessful) {
+            history.push(ActivationFinished.path)
+        }
+    }, [isSuccessful, history])
+
+    const handleSubmit = useCallback(async () => {
+        setFetching(true)
+        try {
+            const response: ActivationResponse = await (
+                await fetch(
+                    `${process.env.M2M_USERS_API_ROOT}/users/activate`,
+                    {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            activationToken,
+                            userId
+                        })
+                    }
+                )
+            ).json()
+
+            if (apiValidation.isError(response)) {
+                throw new Error((response as ErrorResponse).errorType)
             }
-        },
-        [setFetching]
-    )
+            setFetching(false)
+            setIsSuccessful(true)
+        } catch (e) {
+            setErrorMessage(e.message)
+            setFetching(false)
+            setIsSuccessful(false)
+        }
+    }, [setFetching, userId, activationToken])
 
     const handleClearError = useCallback(() => {
         setErrorMessage("")
@@ -49,7 +61,7 @@ export const useUserActivate = () => {
 
     return {
         fetching,
-        makeHandleSubmit,
+        handleSubmit,
         handleClearError,
         errorMessage,
         isSuccessful
