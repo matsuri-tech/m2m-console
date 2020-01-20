@@ -1,9 +1,5 @@
-import { ActivationFinished } from "./ActivationFinished"
 import { Button, Layout, Modal, Typography } from "matsuri-ui"
-import { useEffect } from "react"
-import { useHistory } from "react-router-dom"
-import { useQuery } from "@/hooks/useQuery"
-import { useUserActivate } from "@/pages/ActivationForm/useActivationForm"
+import { useUserActivationForm } from "@/pages/ActivationForm/useActivationForm"
 
 const sx = {
     root: {
@@ -30,24 +26,9 @@ export const ActivationForm: Page = () => {
     const {
         fetching,
         errorMessage,
-        makeHandleSubmit,
-        handleClearError,
-        isSuccessful
-    } = useUserActivate()
-
-    const query = useQuery()
-    const activationToken = query.get("activation_token") || ""
-    const userId = query.get("user_id") || ""
-
-    const handleSubmit = makeHandleSubmit(userId || "", activationToken || "")
-
-    const history = useHistory()
-
-    useEffect(() => {
-        if (isSuccessful) {
-            history.push(ActivationFinished.path)
-        }
-    }, [isSuccessful, history])
+        handleSubmit,
+        handleClearError
+    } = useUserActivationForm()
 
     return (
         <>
