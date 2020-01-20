@@ -88,6 +88,7 @@ export const ResetPasswordForm: Page = () => {
                 value={newPassword}
                 type="password"
                 label="新しいパスワードをご入力ください"
+                autoComplete="new-password"
             />
 
             <Button onClick={handleSubmit} disabled={fetching}>
