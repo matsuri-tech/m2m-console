@@ -81,6 +81,7 @@ export const ResetPasswordRequestForm: Page = () => {
                 value={email}
                 type="email"
                 label="パスワードを再発行したいアカウントのEmailをご入力ください"
+            autocomplete="new-password"
             />
 
             <Button onClick={handleSubmit} disabled={fetching}>
