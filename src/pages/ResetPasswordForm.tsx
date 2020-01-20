@@ -53,7 +53,7 @@ export const ResetPasswordForm: Page = () => {
 
     return (
         <>
-            <h2>Reset Password</h2>
+            <h2>パスワードの入力</h2>
             {errorMessage && (
                 <Modal
                     style={sx.modal}
@@ -87,6 +87,7 @@ export const ResetPasswordForm: Page = () => {
                 onChange={setNewPassword}
                 value={newPassword}
                 type="password"
+                label="新しいパスワードをご入力ください"
             />
 
             <Button onClick={handleSubmit} disabled={fetching}>
