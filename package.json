@@ -62,6 +62,7 @@
         "csstype": "2.6.7",
         "dotenv": "8.2.0",
         "dotenv-webpack": "1.7.0",
+        "endpoints-sdk-cli": "^2.0.6",
         "enzyme": "3.10.0",
         "enzyme-adapter-react-16": "1.15.1",
         "enzyme-to-json": "3.4.3",
