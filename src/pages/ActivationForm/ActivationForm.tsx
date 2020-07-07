@@ -1,26 +1,26 @@
 import { Button, Layout, Modal, Typography } from "matsuri-ui"
-import { useUserActivationForm } from "@/pages/ActivationForm/useActivationForm"
+import { useUserActivationForm } from "./useActivationForm"
 import React from "react"
 
 const sx = {
     root: {
         padding: "1vh 4vw",
         display: "flex",
-        flexDirection: "column"
+        flexDirection: "column",
     },
     logo: {
         paddingTop: "2em",
-        paddingBottom: "2em"
+        paddingBottom: "2em",
     },
     grow: {
-        flexGrow: 1
+        flexGrow: 1,
     },
     modal: {
-        width: "90%"
+        width: "90%",
     },
     noshrink: {
-        flexShrink: 0
-    }
+        flexShrink: 0,
+    },
 } as const
 
 export const ActivationForm: Page = () => {
@@ -28,7 +28,7 @@ export const ActivationForm: Page = () => {
         fetching,
         errorMessage,
         handleSubmit,
-        handleClearError
+        handleClearError,
     } = useUserActivationForm()
 
     return (

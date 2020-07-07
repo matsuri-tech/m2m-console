@@ -1,8 +1,8 @@
-import * as apiValidation from "@/api/validation"
+import * as apiValidation from "../../api/validation"
 import { ActivationFinished } from "./ActivationFinished"
 import { useCallback, useEffect, useState } from "react"
 import { useHistory } from "react-router-dom"
-import { useQuery } from "@/hooks/useQuery"
+import { useQuery } from "../../hooks/useQuery"
 
 export interface UseActivateReq {
     activationToken: string
@@ -37,8 +37,8 @@ export const useUserActivationForm = () => {
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
                             activationToken,
-                            userId
-                        })
+                            userId,
+                        }),
                     }
                 )
             ).json()
@@ -64,6 +64,6 @@ export const useUserActivationForm = () => {
         handleSubmit,
         handleClearError,
         errorMessage,
-        isSuccessful
+        isSuccessful,
     }
 }
