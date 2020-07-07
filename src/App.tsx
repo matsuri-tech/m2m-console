@@ -2,7 +2,6 @@ import { ActivationFinished } from "./pages/ActivationForm/ActivationFinished"
 import { ActivationForm } from "./pages/ActivationForm/ActivationForm"
 import { AppHeader } from "./pages/AppHeader"
 import { AuthProvider, useAuth } from "./hooks/useAuth"
-import { ListUsers } from "./pages/ListUsers/ListUsers"
 import { ResetPasswordFinished } from "./pages/ResetPasswordForm/ResetPasswordFinished"
 import { ResetPasswordForm } from "./pages/ResetPasswordForm/ResetPasswordForm"
 import { ResetPasswordRequestFinished } from "./pages/ResetPasswordRequestForm/ResetPasswordRequestFinished"
@@ -28,9 +27,6 @@ export const App = () => {
 
                 <Main>
                     <Switch>
-                        <Route exact path={"/"}>
-                            <ListUsers />
-                        </Route>
                         <Route path={ActivationForm.path}>
                             <ActivationForm />
                         </Route>

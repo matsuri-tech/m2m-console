@@ -1,5 +1,4 @@
 import { Layout, ListItem, Menu, Row } from "matsuri-ui"
-import { Link } from "react-router-dom"
 import { useAuthCtx } from "../hooks/useAuth"
 import React, { useCallback, useState } from "react"
 import styled from "styled-components"
@@ -67,9 +66,7 @@ export const AppHeader: React.FC = () => {
                 <Row>
                     <Layout.Item>
                         <NavMenu>
-                            <li>
-                                <Link to={"/"}>m2m-users</Link>
-                            </li>
+                            <li>m2m-users</li>
                         </NavMenu>
                     </Layout.Item>
                     <NavSpacer />
@@ -94,9 +91,7 @@ export const AppHeader: React.FC = () => {
                                 </Menu>
                             </NavRightMenu>
                         ) : (
-                            <NavRightMenu>
-                                <Link to="/login">ログイン</Link>
-                            </NavRightMenu>
+                            <NavRightMenu />
                         )}
                     </Layout.Item>
                 </Row>
