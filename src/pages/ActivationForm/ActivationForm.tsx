@@ -1,5 +1,6 @@
 import { Button, Layout, Modal, Typography } from "matsuri-ui"
 import { useUserActivationForm } from "@/pages/ActivationForm/useActivationForm"
+import React from "react"
 
 const sx = {
     root: {

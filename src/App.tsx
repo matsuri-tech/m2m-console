@@ -1,21 +1,32 @@
 import { ActivationFinished } from "./pages/ActivationForm/ActivationFinished"
 import { ActivationForm } from "./pages/ActivationForm/ActivationForm"
+import { AppHeader } from "./pages/AppHeader"
+import { ListUsers } from "./pages/ListUsers/ListUsers"
 import { ResetPasswordFinished } from "./pages/ResetPasswordForm/ResetPasswordFinished"
 import { ResetPasswordForm } from "./pages/ResetPasswordForm/ResetPasswordForm"
 import { ResetPasswordRequestFinished } from "./pages/ResetPasswordRequestForm/ResetPasswordRequestFinished"
 import { ResetPasswordRequestForm } from "./pages/ResetPasswordRequestForm/ResetPasswordRequestForm"
 import { Route, BrowserRouter as Router, Switch } from "react-router-dom"
+import React from "react"
 import styled from "styled-components"
 
 const Main = styled.main`
-    padding: 0 8vw;
+    margin: 2ex auto;
+    max-width: 1024px;
 `
 
 export const App = () => {
     return (
         <Router>
+            <header>
+                <AppHeader />
+            </header>
+
             <Main>
                 <Switch>
+                    <Route path={"/"}>
+                        <ListUsers />
+                    </Route>
                     <Route path={ActivationForm.path}>
                         <ActivationForm />
                     </Route>
