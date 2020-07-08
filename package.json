@@ -1,7 +1,7 @@
 {
     "name": "matsuri-react-app-template",
-    "title": "Edit package.json",
-    "description": "Edit package.json",
+    "title": "m2m-users",
+    "description": "m2m-users",
     "homepage": "https://edit-package.json",
     "version": "1.0.1",
     "repository": "https://git-matsuri.xyz/developer/matsuri-react-app-template.git",
@@ -144,6 +144,8 @@
         ]
     },
     "dependencies": {
+        "@material-ui/core": "^4.11.0",
+        "@material-ui/icons": "^4.9.1",
         "@types/react-router": "^5.1.8",
         "matsuri-ui": "7.12.0",
         "react-router": "^5.2.0",

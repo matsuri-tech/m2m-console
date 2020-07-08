@@ -1,8 +1,8 @@
 import { ActivationFinished } from "./pages/ActivationForm/ActivationFinished"
 import { ActivationForm } from "./pages/ActivationForm/ActivationForm"
+import { AlertProvider, Container } from "matsuri-ui"
 import { AppHeader } from "./pages/AppHeader"
 import { AuthProvider, useAuth } from "./hooks/useAuth"
-import { Container } from "matsuri-ui"
 import { ListUsers } from "./pages/ListUsers"
 import { Login } from "./pages/Login"
 import {
@@ -27,45 +27,47 @@ export const App = () => {
 
     return (
         <AuthProvider value={auth}>
-            <Router>
-                <header>
-                    <AppHeader />
-                </header>
+            <AlertProvider>
+                <Router>
+                    <header>
+                        <AppHeader />
+                    </header>
 
-                <Container maxWidth="lg">
-                    <Main>
-                        <Switch>
-                            <Route exact path={"/users"}>
-                                <ListUsers />
-                            </Route>
-                            <Route path={ActivationForm.path}>
-                                <ActivationForm />
-                            </Route>
-                            <Route path={ActivationFinished.path}>
-                                <ActivationFinished />
-                            </Route>
-                            <Route path={ResetPasswordForm.path}>
-                                <ResetPasswordForm />
-                            </Route>
-                            <Route path={ResetPasswordFinished.path}>
-                                <ResetPasswordFinished />
-                            </Route>
-                            <Route path={ResetPasswordRequestForm.path}>
-                                <ResetPasswordRequestForm />
-                            </Route>
-                            <Route path={ResetPasswordRequestFinished.path}>
-                                <ResetPasswordRequestFinished />
-                            </Route>
-                            <Route path={"/login"}>
-                                <Login />
-                            </Route>
-                            <Route path="*">
-                                <Redirect to="/users" />
-                            </Route>
-                        </Switch>
-                    </Main>
-                </Container>
-            </Router>
+                    <Container maxWidth="lg">
+                        <Main>
+                            <Switch>
+                                <Route exact path={"/users"}>
+                                    <ListUsers />
+                                </Route>
+                                <Route path={ActivationForm.path}>
+                                    <ActivationForm />
+                                </Route>
+                                <Route path={ActivationFinished.path}>
+                                    <ActivationFinished />
+                                </Route>
+                                <Route path={ResetPasswordForm.path}>
+                                    <ResetPasswordForm />
+                                </Route>
+                                <Route path={ResetPasswordFinished.path}>
+                                    <ResetPasswordFinished />
+                                </Route>
+                                <Route path={ResetPasswordRequestForm.path}>
+                                    <ResetPasswordRequestForm />
+                                </Route>
+                                <Route path={ResetPasswordRequestFinished.path}>
+                                    <ResetPasswordRequestFinished />
+                                </Route>
+                                <Route path={"/login"}>
+                                    <Login />
+                                </Route>
+                                <Route path="*">
+                                    <Redirect to="/users" />
+                                </Route>
+                            </Switch>
+                        </Main>
+                    </Container>
+                </Router>
+            </AlertProvider>
         </AuthProvider>
     )
 }
