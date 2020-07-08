@@ -1,0 +1,8 @@
+{
+    "dependencies": {
+        "m2m-users": {
+            "version": "9e164be8a7ed90dfece2ab225688cfe8b200c882",
+            "repository": "git@github.com:matsuri-tech/m2m-users.git"
+        }
+    }
+}

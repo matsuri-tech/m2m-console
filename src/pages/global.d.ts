@@ -1,3 +1,3 @@
-type Page<Props = {}> = React.FC<Props> & {
+type Page<Props = Record<string, unknown>> = React.FC<Props> & {
     path: string
 }

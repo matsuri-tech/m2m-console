@@ -1,7 +1,7 @@
 module.exports = {
     roots: ["<rootDir>/src"],
     transform: {
-        "^.+\\.tsx?$": "ts-jest"
+        "^.+\\.tsx?$": "ts-jest",
     },
     testRegex: "(/__tests__/.*|(\\.|/)(test|spec))\\.(ts|tsx)$",
     testPathIgnorePatterns: ["./src/__tests__/setupEnzyme.ts"],
@@ -11,6 +11,6 @@ module.exports = {
     setupFilesAfterEnv: ["<rootDir>/src/__tests__/setupEnzyme.ts"],
     moduleNameMapper: {
         "\\.(css|less|scss|sass)$": "identity-obj-proxy",
-        "^@/(.+)": "<rootDir>/src/$1"
-    }
+        "^@/(.+)": "<rootDir>/src/$1",
+    },
 }

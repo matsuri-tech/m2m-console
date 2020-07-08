@@ -1,5 +1,5 @@
-import * as apiValidation from "@/api/validation"
-import { ResetPasswordRequestFinished } from "@/pages/ResetPasswordRequestForm/ResetPasswordRequestFinished"
+import * as apiValidation from "../../api/validation"
+import { ResetPasswordRequestFinished } from "./ResetPasswordRequestFinished"
 import { useCallback, useEffect, useState } from "react"
 import { useHistory } from "react-router-dom"
 
@@ -27,8 +27,8 @@ export const useResetPasswordRequest = () => {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
-                            email
-                        })
+                            email,
+                        }),
                     }
                 )
             ).json()
@@ -55,6 +55,6 @@ export const useResetPasswordRequest = () => {
         handleClearError,
         errorMessage,
         email,
-        setEmail
+        setEmail,
     }
 }

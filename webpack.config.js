@@ -7,42 +7,45 @@ const AggressiveMergingPlugin = require("webpack/lib/optimize/AggressiveMergingP
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const dotenv = require("dotenv")
 const pkg = require("./package.json")
+const TerserPlugin = require("terser-webpack-plugin")
+const StatsPlugin = require("stats-webpack-plugin")
 
-module.exports = (_, { mode = "development" }) => {
-    const env = dotenv.config().parsed
-    let envKeys = Object.keys(env).reduce((prev, next) => {
+/**
+ * @param {DotenvParseOutput} env
+ */
+const makeEnvKeys = (env) => {
+    return Object.keys(env).reduce((prev, next) => {
         prev[`process.env.${next}`] = JSON.stringify(env[next])
         return prev
     }, {})
+}
 
-    if (mode === "production") {
-        const envProd = dotenv.config({
-            path: path.resolve(process.cwd(), ".env.production")
-        }).parsed
-        envKeys = Object.assign(
-            envKeys,
-            Object.keys(envProd).reduce((prev, next) => {
-                prev[`process.env.${next}`] = JSON.stringify(envProd[next])
-                return prev
-            }, {})
+module.exports = (_, { mode = "development" }) => {
+    const env = dotenv.config().parsed
+    let envKeys = makeEnvKeys(env)
+
+    if (mode === "production" || mode === "development") {
+        const additionalEnvKeys = makeEnvKeys(
+            dotenv.config({
+                path: path.resolve(process.cwd(), `.env.${mode}`),
+            }).parsed
         )
+        envKeys = Object.assign(envKeys, additionalEnvKeys)
     }
+
     /**@type {webpack.Configuration} */
     const config = {
         mode,
         /** @see https://webpack.js.org/configuration/target */
         target: "web", // (default) web
         entry: {
-            index: "./src/index.tsx"
+            index: "./src/index.tsx",
             // another: "./src/another-module.tsx"
         },
         /** @see https://webpack.js.org/configuration/devtool/#devtool */
         devtool: "",
         resolve: {
             extensions: [".js", ".jsx", ".ts", ".tsx"],
-            alias: {
-                "@": path.resolve(__dirname, "src")
-            }
         },
         module: {
             rules: [
@@ -51,12 +54,15 @@ module.exports = (_, { mode = "development" }) => {
 
                     exclude: /node_modules/,
                     use: {
-                        loader: "babel-loader"
-                    }
+                        loader: "babel-loader",
+                        options: {
+                            babelrc: true,
+                        },
+                    },
                 },
                 {
                     test: /\.md$/,
-                    use: "raw-loader"
+                    use: "raw-loader",
                 },
                 {
                     test: /\.(ico|jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)(\?.*)?$/,
@@ -70,18 +76,18 @@ module.exports = (_, { mode = "development" }) => {
 
                                 return "[hash].[ext]"
                             },
-                            outputPath: "static/img"
-                        }
-                    }
+                            outputPath: "static/img",
+                        },
+                    },
                 },
                 {
                     test: /\.css$/i,
                     use: [
                         MiniCssExtractPlugin.loader,
-                        { loader: "css-loader", options: { importLoaders: 1 } }
-                    ]
-                }
-            ]
+                        { loader: "css-loader", options: { importLoaders: 1 } },
+                    ],
+                },
+            ],
         },
         output: {
             path: path.resolve(__dirname, "dist"),
@@ -89,7 +95,7 @@ module.exports = (_, { mode = "development" }) => {
             chunkFilename: "static/js/[name].[chunkhash:8].chunk.js",
             libraryTarget: "umd",
             //publicPath: "/dist/",
-            umdNamedDefine: true
+            umdNamedDefine: true,
         },
         /** @see https://webpack.js.org/configuration/optimization */
         optimization: {
@@ -98,37 +104,42 @@ module.exports = (_, { mode = "development" }) => {
             minimize: true,
             nodeEnv: "production",
             splitChunks: {
-                chunks: "all"
+                chunks: "all",
             },
             runtimeChunk: {
-                name: "runtime"
-            }
+                name: "runtime",
+            },
+            minimizer: [
+                new TerserPlugin({
+                    extractComments: "all",
+                }),
+            ],
         },
         plugins: [
             new webpack.DefinePlugin({
-                "process.env.NODE_ENV": '"production"',
-                ...envKeys
-            }),
-            new webpack.ProvidePlugin({
-                React: "react"
+                "process.env.NODE_ENV":
+                    `"${process.env.NODE_ENV}"` || '"production"',
+                ...envKeys,
             }),
             /** @see https://github.com/webpack/webpack/tree/master/examples/aggressive-merging */
             new AggressiveMergingPlugin(),
             new MiniCssExtractPlugin({
                 filename: "static/css/[name].[chunkhash:8].css",
-                chunkFilename: "static/css/[id].[chunkhash:8].css"
+                chunkFilename: "static/css/[id].[chunkhash:8].css",
             }),
             new CleanWebpackPlugin(),
-            new CopyWebpackPlugin([
-                { from: path.resolve(__dirname, "public"), to: "./" }
-            ]),
+            new CopyWebpackPlugin({
+                patterns: [
+                    { from: path.resolve(__dirname, "public"), to: "./" },
+                ],
+            }),
             new HtmlWebpackPlugin({
                 title: pkg.title,
                 homepage: pkg.homepage,
                 description: pkg.description,
-                template: path.resolve(__dirname, "public/index.html")
-            })
-        ]
+                template: path.resolve(__dirname, "public/index.html"),
+            }),
+        ],
     }
 
     /**
@@ -138,38 +149,42 @@ module.exports = (_, { mode = "development" }) => {
         config.devtool = "source-map"
         config.output = {
             path: path.resolve(__dirname, "dist"),
-            filename: "[name].js"
+            filename: "[name].js",
         }
         config.module.rules.push({
             loader: "source-map-loader",
             test: /\.js$/,
             exclude: /node_modules/,
-            enforce: "pre"
+            enforce: "pre",
         })
         config.plugins = [
-            new webpack.ProvidePlugin({
-                React: "react",
-                ReactDOM: "react-dom"
-            }),
             new MiniCssExtractPlugin({
                 filename: "static/styles/[name].[chunkhash:8].css",
-                chunkFilename: "static/styles/[id].[chunkhash:8].css"
+                chunkFilename: "static/styles/[id].[chunkhash:8].css",
             }),
             new HtmlWebpackPlugin({
                 title: pkg.title,
                 description: pkg.description,
                 homepage: pkg.homepage,
-                template: path.resolve(__dirname, "public/index.html")
+                template: path.resolve(__dirname, "public/index.html"),
             }),
             new webpack.DefinePlugin({
-                "process.env.NODE_ENV": '"development"',
-                ...envKeys
+                "process.env.NODE_ENV":
+                    `"${process.env.NODE_ENV}"` || '"development"',
+                ...envKeys,
             }),
-            new webpack.HotModuleReplacementPlugin()
+            new webpack.HotModuleReplacementPlugin(),
+            new StatsPlugin("stats.json", {
+                chunkModules: true,
+                exclude: [/node_modules[\\/]react/],
+            }),
         ]
         config.devServer = {
             historyApiFallback: true,
             contentBase: path.resolve(__dirname, "public"),
+            host: "0.0.0.0",
+            port: 3000,
+            useLocalIp: true,
             stats: {
                 colors: true,
                 hash: false,
@@ -184,8 +199,8 @@ module.exports = (_, { mode = "development" }) => {
                 errors: true,
                 errorDetails: true,
                 warnings: false,
-                publicPath: false
-            }
+                publicPath: false,
+            },
             // allowedHosts: []
         }
         config.optimization = {
@@ -199,10 +214,10 @@ module.exports = (_, { mode = "development" }) => {
                         test: /node_modules/,
                         name: "vendor",
                         enforce: true,
-                        chunks: "all"
-                    }
-                }
-            }
+                        chunks: "all",
+                    },
+                },
+            },
         }
     }
     return config

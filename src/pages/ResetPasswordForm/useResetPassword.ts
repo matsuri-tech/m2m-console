@@ -1,5 +1,5 @@
-import * as apiValidation from "@/api/validation"
-import { ResetPasswordFinished } from "@/pages/ResetPasswordForm/ResetPasswordFinished"
+import * as apiValidation from "../../api/validation"
+import { ResetPasswordFinished } from "./ResetPasswordFinished"
 import { useCallback, useEffect, useState } from "react"
 import { useHistory } from "react-router-dom"
 import { useQuery } from "../../hooks/useQuery"
@@ -34,8 +34,8 @@ export const useResetPassword = () => {
                         body: JSON.stringify({
                             resetToken,
                             userId,
-                            newPassword
-                        })
+                            newPassword,
+                        }),
                     }
                 )
             ).json()
@@ -62,6 +62,6 @@ export const useResetPassword = () => {
         handleClearError,
         errorMessage,
         newPassword,
-        setNewPassword
+        setNewPassword,
     }
 }
