@@ -43,6 +43,7 @@ export interface UseAuthOption {
 
 export interface UseAuthState {
     token: string
+    loaded: boolean
     authenticated: boolean
     requestLogin: (input: LoginInput) => void
     requestLogout: () => void
@@ -61,6 +62,7 @@ export const useAuth = (option?: UseAuthOption): UseAuthState => {
 
     if (!tokenCache) tokenCache = tokenStorageApi.getToken()
     const [token, setToken] = useState<string>(tokenCache || "")
+    const [loaded, setLoaded] = useState(false)
     const [authenticated, setAuthenticated] = useState(!!tokenCache)
 
     const tryCheckAuth = useCallback(() => {
@@ -77,7 +79,9 @@ export const useAuth = (option?: UseAuthOption): UseAuthState => {
     }, [jwtExpirationChecker, tokenStorageApi])
 
     useEffect(() => {
+        setLoaded(false)
         tryCheckAuth()
+        setLoaded(true)
     }, [tryCheckAuth])
 
     const requestLogin = useCallback(
@@ -109,6 +113,7 @@ export const useAuth = (option?: UseAuthOption): UseAuthState => {
 
     return {
         token,
+        loaded,
         authenticated,
         requestLogin,
         requestLogout,
@@ -126,6 +131,7 @@ export const useAuthCtx = (): UseAuthState | never => {
     if (!ctx) throw new Error("Authentication Provider is not found")
     return {
         token: ctx.token,
+        loaded: ctx.loaded,
         authenticated: ctx.authenticated,
         requestLogin: ctx.requestLogin,
         requestLogout: ctx.requestLogout,

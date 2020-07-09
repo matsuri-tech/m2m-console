@@ -1,6 +1,7 @@
-import { Layout, ListItem, Menu, Row } from "matsuri-ui"
+import { Container, Layout, ListItem, Menu, Row } from "matsuri-ui"
 import { useAuthCtx } from "../hooks/useAuth"
-import React, { useCallback, useState } from "react"
+import { useHistory } from "react-router"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
 import styled from "styled-components"
 
 const NavContainer = styled.nav`
@@ -8,7 +9,6 @@ const NavContainer = styled.nav`
 `
 
 const MenuContainer = styled.div`
-    max-width: 1024px;
     margin: 0 auto;
     padding: 2ex 0;
 `
@@ -46,10 +46,9 @@ const NavRightMenu = styled.div`
 `
 
 export const AppHeader: React.FC = () => {
-    const { authenticated } = useAuthCtx()
-    const { requestLogout } = useAuthCtx()
+    const { authenticated, loaded, requestLogout } = useAuthCtx()
     const [anchorEl, setAnchorEl] = useState<Element | null>(null)
-    const open = Boolean(anchorEl)
+    const open = useMemo(() => Boolean(anchorEl), [anchorEl])
     const handleOpenAccountMenu = useCallback(
         ({ currentTarget }: React.SyntheticEvent) => {
             setAnchorEl((prev) => (prev ? null : currentTarget))
@@ -60,42 +59,49 @@ export const AppHeader: React.FC = () => {
         setAnchorEl(null)
     }, [])
 
+    const history = useHistory()
+    useEffect(() => {
+        if (loaded && !authenticated) {
+            history.push("/login")
+        }
+    }, [authenticated, history, loaded])
+
     return (
         <NavContainer>
-            <MenuContainer>
-                <Row>
-                    <Layout.Item>
-                        <NavMenu>
-                            <li>m2m-users</li>
-                        </NavMenu>
-                    </Layout.Item>
-                    <NavSpacer />
-                    <Layout.Item>
-                        {authenticated ? (
-                            <NavRightMenu>
-                                <a
-                                    role="button"
-                                    onClick={handleOpenAccountMenu}
-                                >
-                                    アカウント
-                                </a>
-                                <Menu
-                                    paperProps={{ elevation: 5 }}
-                                    anchorEl={anchorEl}
-                                    open={open}
-                                    onClickOutside={handleClose}
-                                >
-                                    <ListItem onClick={requestLogout}>
-                                        ログアウト
-                                    </ListItem>
-                                </Menu>
-                            </NavRightMenu>
-                        ) : (
-                            <NavRightMenu />
-                        )}
-                    </Layout.Item>
-                </Row>
-            </MenuContainer>
+            <Container maxWidth="lg">
+                <MenuContainer>
+                    <Row>
+                        <Layout.Item>
+                            <NavMenu>
+                                <li>m2m-users</li>
+                            </NavMenu>
+                        </Layout.Item>
+                        <NavSpacer />
+                        <Layout.Item>
+                            {authenticated && (
+                                <NavRightMenu>
+                                    <a
+                                        role="button"
+                                        onClick={handleOpenAccountMenu}
+                                    >
+                                        アカウント
+                                    </a>
+                                    <Menu
+                                        paperProps={{ elevation: 5 }}
+                                        anchorEl={anchorEl}
+                                        open={open}
+                                        onClickOutside={handleClose}
+                                    >
+                                        <ListItem onClick={requestLogout}>
+                                            ログアウト
+                                        </ListItem>
+                                    </Menu>
+                                </NavRightMenu>
+                            )}
+                        </Layout.Item>
+                    </Row>
+                </MenuContainer>
+            </Container>
         </NavContainer>
     )
 }
