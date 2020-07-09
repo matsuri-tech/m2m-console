@@ -274,7 +274,7 @@ export const ListUsers: React.FC = () => {
 
     const handleUpdateScope = useCallback(
         async (scope: UserScope) => {
-            if (selectedUserIndex) {
+            if (selectedUserIndex !== undefined) {
                 const { error } = await requestSetScope(token, {
                     userId: usersTableData[selectedUserIndex].id,
                     scope,
