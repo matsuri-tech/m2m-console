@@ -61,7 +61,7 @@ export interface UseFetchState<T, S = any> {
     data: T | undefined
     loaded: boolean
     error: Error | undefined
-    refetch: (payload: fetcherPayload<S>) => Promise<fetcherResult<T>>
+    refetch: (payload?: fetcherPayload<S>) => Promise<fetcherResult<T>>
 }
 
 export const useFetch = <T, S = any>(
