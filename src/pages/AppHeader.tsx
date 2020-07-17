@@ -1,7 +1,6 @@
 import { Container, Layout, ListItem, Menu, Row } from "matsuri-ui"
 import { useAuthCtx } from "../hooks/useAuth"
-import { useHistory } from "react-router"
-import React, { useCallback, useEffect, useMemo, useState } from "react"
+import React, { useCallback, useMemo, useState } from "react"
 import styled from "styled-components"
 
 const NavContainer = styled.nav`
@@ -46,7 +45,7 @@ const NavRightMenu = styled.div`
 `
 
 export const AppHeader: React.FC = () => {
-    const { authenticated, loaded, requestLogout } = useAuthCtx()
+    const { authenticated, requestLogout } = useAuthCtx()
     const [anchorEl, setAnchorEl] = useState<Element | null>(null)
     const open = useMemo(() => Boolean(anchorEl), [anchorEl])
     const handleOpenAccountMenu = useCallback(
@@ -58,13 +57,6 @@ export const AppHeader: React.FC = () => {
     const handleClose = useCallback(() => {
         setAnchorEl(null)
     }, [])
-
-    const history = useHistory()
-    useEffect(() => {
-        if (loaded && !authenticated) {
-            history.push("/login")
-        }
-    }, [authenticated, history, loaded])
 
     return (
         <NavContainer>
