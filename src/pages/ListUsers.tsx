@@ -234,6 +234,9 @@ export const ListUsers: React.FC = () => {
 
     const { headers, rows } = useTable({
         columns: {
+            id: {
+                Header: "Id",
+            },
             name: {
                 Header: "Name",
             },
