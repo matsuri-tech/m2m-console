@@ -29,6 +29,7 @@ import {
     useUsers,
 } from "../hooks/useUsers"
 import { useAuthCtx } from "../hooks/useAuth"
+import { useHistory } from "react-router"
 import MoreIcon from "@material-ui/icons/MoreHoriz"
 import React, {
     Reducer,
@@ -216,7 +217,18 @@ const ScopeCell: React.FC<UseTableCellProps<User, "scope">> = ({ cell }) => {
 }
 
 export const ListUsers: React.FC = () => {
-    const { token } = useAuthCtx()
+    const { token, authenticated } = useAuthCtx()
+
+    // ログインしてなければログイン画面に飛ばす
+    // usersはログインしてなくても使えるページ(パスワードリセットなど)とそうでないページがあるためここでリダイレクト処理をしているが、
+    // 本当はrouterの分岐するところでauth guardを張るなどした方がいい
+    const history = useHistory()
+    useEffect(() => {
+        if (!authenticated) {
+            history.push("/login")
+        }
+    }, [authenticated, history])
+
     const { data: users, refetch } = useUsers(token)
     const usersTableData = useMemo(() => users ?? [], [users])
 
