@@ -9,6 +9,7 @@ import {
     Row,
     SelectField,
     Table,
+    TextField,
     Typography,
     UseTableCellProps,
     useAlert,
@@ -25,10 +26,12 @@ import {
     castToScopeActions,
     castToScopeResources,
     displayAuthority,
+    requestCreateUser,
     requestSetScope,
     useUsers,
 } from "../hooks/useUsers"
 import { useAuthCtx } from "../hooks/useAuth"
+import { useHistory } from "react-router"
 import MoreIcon from "@material-ui/icons/MoreHoriz"
 import React, {
     Reducer,
@@ -205,6 +208,109 @@ const ScopeModal: React.FC<{
     )
 }
 
+const Authorities = ["GeneralUser", "Manager", "Admin"]
+
+const CreateUser: React.FC<{ refetch: () => void }> = ({ refetch }) => {
+    const { token } = useAuthCtx()
+    const { addAlert } = useAlert()
+
+    const [open, setOpen] = useState(false)
+    const handleOpen = useCallback(() => {
+        setOpen(true)
+    }, [])
+    const handleClose = useCallback(() => {
+        setOpen(false)
+    }, [])
+    const handleSubmit = useCallback(
+        async (event: React.FormEvent<HTMLFormElement>) => {
+            event.preventDefault()
+
+            const formData = new FormData(event.currentTarget)
+            const input = Object.fromEntries(formData)
+            const resp = await requestCreateUser(token, {
+                name: input["name"] as string,
+                email: input["email"] as string,
+                password: input["password"] as string,
+                authority: input["authority"] as string,
+            })
+
+            if (resp.error) {
+                addAlert("ユーザー作成に失敗しました", {
+                    severity: "error",
+                })
+            } else {
+                addAlert("ユーザーを作成しました", {
+                    severity: "success",
+                    duration: 3500,
+                })
+            }
+
+            handleClose()
+            refetch()
+        },
+        [addAlert, handleClose, refetch, token]
+    )
+
+    return (
+        <>
+            <Button variant="filled" color="primary" onClick={handleOpen}>
+                ユーザーを作成
+            </Button>
+
+            <Modal
+                backdrop
+                style={{ width: 500 }}
+                open={open}
+                onClose={handleClose}
+                onClickOutside={handleClose}
+                header={<Typography variant="h3">ユーザーの作成</Typography>}
+                body={
+                    <form onSubmit={handleSubmit}>
+                        <Column gap={1}>
+                            <Layout.Item>
+                                <TextField name="name" label="name" />
+                            </Layout.Item>
+                            <Layout.Item>
+                                <TextField name="email" label="email" />
+                            </Layout.Item>
+                            <Layout.Item>
+                                <TextField
+                                    name="password"
+                                    label="password"
+                                    type="password"
+                                />
+                            </Layout.Item>
+                            <Layout.Item>
+                                <SelectField
+                                    name="authority"
+                                    label="authority"
+                                    data={Authorities.map((v) => ({
+                                        value: v,
+                                    }))}
+                                    defaultValue="GeneralUser"
+                                />
+                            </Layout.Item>
+                            <Layout.Item>
+                                <Row justify="flex-end">
+                                    <Layout.Item>
+                                        <Button
+                                            variant="filled"
+                                            color="primary"
+                                            type="submit"
+                                        >
+                                            送信
+                                        </Button>
+                                    </Layout.Item>
+                                </Row>
+                            </Layout.Item>
+                        </Column>
+                    </form>
+                }
+            />
+        </>
+    )
+}
+
 const AuthorityCell: React.FC<UseTableCellProps<User, "authority">> = ({
     cell,
 }) => {
@@ -216,12 +322,26 @@ const ScopeCell: React.FC<UseTableCellProps<User, "scope">> = ({ cell }) => {
 }
 
 export const ListUsers: React.FC = () => {
-    const { token } = useAuthCtx()
+    const { token, authenticated } = useAuthCtx()
+
+    // ログインしてなければログイン画面に飛ばす
+    // usersはログインしてなくても使えるページ(パスワードリセットなど)とそうでないページがあるためここでリダイレクト処理をしているが、
+    // 本当はrouterの分岐するところでauth guardを張るなどした方がいい
+    const history = useHistory()
+    useEffect(() => {
+        if (!authenticated) {
+            history.push("/login")
+        }
+    }, [authenticated, history])
+
     const { data: users, refetch } = useUsers(token)
     const usersTableData = useMemo(() => users ?? [], [users])
 
     const { headers, rows } = useTable({
         columns: {
+            id: {
+                Header: "Id",
+            },
             name: {
                 Header: "Name",
             },
@@ -311,45 +431,54 @@ export const ListUsers: React.FC = () => {
                 <Typography variant="h2">ユーザー一覧</Typography>
             </PageHeader>
 
-            <Table>
-                <Table.Header>
-                    <Table.Row>
-                        {headers.map((column) => (
-                            <Table.HeaderCell key={column.key}>
-                                {column.render()}
-                            </Table.HeaderCell>
-                        ))}
-                        <Table.HeaderCell />
-                    </Table.Row>
-                </Table.Header>
-                <Table.Body striped>
-                    {rows.map((row, index) => (
-                        <Table.Row key={row.key}>
-                            {row.cells.map((cell) => (
-                                <Table.Cell key={cell.key}>
-                                    {cell.render()}
-                                </Table.Cell>
+            <Column gap={1}>
+                <Layout.Item>
+                    <Row justify="flex-end">
+                        <CreateUser refetch={refetch} />
+                    </Row>
+                </Layout.Item>
+                <Layout.Item>
+                    <Table>
+                        <Table.Header>
+                            <Table.Row>
+                                {headers.map((column) => (
+                                    <Table.HeaderCell key={column.key}>
+                                        {column.render()}
+                                    </Table.HeaderCell>
+                                ))}
+                                <Table.HeaderCell />
+                            </Table.Row>
+                        </Table.Header>
+                        <Table.Body striped>
+                            {rows.map((row, index) => (
+                                <Table.Row key={row.key}>
+                                    {row.cells.map((cell) => (
+                                        <Table.Cell key={cell.key}>
+                                            {cell.render()}
+                                        </Table.Cell>
+                                    ))}
+                                    <Table.Cell>
+                                        <Button
+                                            icon={<MoreIcon />}
+                                            onClick={handleClick}
+                                            data-row-index={index}
+                                        />
+                                    </Table.Cell>
+                                </Table.Row>
                             ))}
-                            <Table.Cell>
-                                <Button
-                                    icon={<MoreIcon />}
-                                    onClick={handleClick}
-                                    data-row-index={index}
-                                />
-                            </Table.Cell>
-                        </Table.Row>
-                    ))}
-                    <Menu
-                        anchorEl={anchorEl}
-                        open={open}
-                        onClickOutside={handleClose}
-                    >
-                        <ListItem onClick={handleEditScope}>
-                            Scopeを編集
-                        </ListItem>
-                    </Menu>
-                </Table.Body>
-            </Table>
+                            <Menu
+                                anchorEl={anchorEl}
+                                open={open}
+                                onClickOutside={handleClose}
+                            >
+                                <ListItem onClick={handleEditScope}>
+                                    Scopeを編集
+                                </ListItem>
+                            </Menu>
+                        </Table.Body>
+                    </Table>
+                </Layout.Item>
+            </Column>
 
             <ScopeModal
                 defaultScope={selectedUserScope}

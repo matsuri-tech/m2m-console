@@ -86,3 +86,15 @@ export const requestSetScope = (
         body: JSON.stringify(input),
     })
 }
+
+export const requestCreateUser = (
+    token: string,
+    input: { name: string; email: string; password: string; authority: string }
+) => {
+    return fetcherCreator<void>(m2mUsers.v1.createUser, {
+        method: "POST",
+        authToken: token,
+    })({
+        body: JSON.stringify(input),
+    })
+}
