@@ -1,0 +1,11 @@
+[build]
+  # Default build command.
+  command = "yarn run build-dev"
+
+[context.production]
+  command = "yarn run build"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

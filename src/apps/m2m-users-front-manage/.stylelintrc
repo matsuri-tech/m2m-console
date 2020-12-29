@@ -1,0 +1,9 @@
+{
+  "extends": [
+    "stylelint-config-recommended",
+    "stylelint-config-recess-order"
+  ],
+  "rules": {
+    "order/properties-order": null
+  }
+}
