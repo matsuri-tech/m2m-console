@@ -1,0 +1,3 @@
+[submodule "apps/users"]
+	path = apps/users
+	url = git@github.com:matsuri-tech/m2m-users-front-manage.git
