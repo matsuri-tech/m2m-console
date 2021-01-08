@@ -1,0 +1,40 @@
+{
+  "name": "m2m-console",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "parcel src/index.html",
+    "build": "parcel build src/index.html",
+    "build:gh-pages": "yarn build --public-url ./",
+    "lint:ts": "eslint \"src/**/*.{ts,tsx}\"",
+    "lint:json": "prettier '*.json'",
+    "format:ts": "yarn lint:ts --fix",
+    "format:json": "yarn lint:json --write"
+  },
+  "dependencies": {
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-router-dom": "^5.2.0"
+  },
+  "devDependencies": {
+    "@babel/core": "7.11.6",
+    "@babel/preset-env": "7.11.5",
+    "@babel/preset-react": "7.10.4",
+    "@types/node": "14.10.1",
+    "@types/react": "16.9.49",
+    "@types/react-dom": "16.9.8",
+    "@types/react-router-dom": "5.1.5",
+    "@typescript-eslint/eslint-plugin": "4.1.0",
+    "@typescript-eslint/parser": "4.1.0",
+    "eslint": "7.9.0",
+    "eslint-config-prettier": "6.11.0",
+    "eslint-plugin-jsx-a11y": "6.3.1",
+    "eslint-plugin-prettier": "3.1.4",
+    "eslint-plugin-react": "7.20.6",
+    "eslint-plugin-react-hooks": "4.1.2",
+    "eslint-plugin-sort-imports-es6-autofix": "0.5.0",
+    "parcel-bundler": "1.12.4",
+    "prettier": "2.1.1",
+    "typescript": "4.0.2"
+  }
+}
