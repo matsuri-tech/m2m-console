@@ -1,7 +1,6 @@
-import "../apps/users/dist/static/css/app.css";
 import { Link, Route, BrowserRouter as Router, Switch } from "react-router-dom";
-import { mountTo } from "../apps/users/dist/app.js";
-import React, { useEffect } from "react";
+import "../apps/users/dist/app.js";
+import React from "react";
 import ReactDOM from "react-dom";
 
 const App = () => {
@@ -22,23 +21,11 @@ const App = () => {
             <>hello, world</>
           </Route>
           <Route path="/users">
-            <M2mUsersApp></M2mUsersApp>
+            <m2m-users-app />
           </Route>
         </Switch>
       </div>
     </Router>
-  );
-};
-
-const M2mUsersApp = () => {
-  useEffect(() => {
-    mountTo("users");
-  }, []);
-
-  return (
-    <>
-      <div id="users"></div>
-    </>
   );
 };
 
