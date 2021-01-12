@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "parcel src/index.html",
-    "build": "parcel build src/index.html",
+    "dev": "yarn build:users:dev && parcel src/index.html",
+    "build": "yarn build:users:prod && parcel build src/index.html",
     "build:gh-pages": "yarn build --public-url ./",
+    "build:users:dev": "cd apps/users && PUBLISH=true yarn webpack --mode development",
+    "build:users:prod": "cd apps/users && PUBLISH=true yarn webpack --mode production",
     "lint:ts": "eslint \"src/**/*.{ts,tsx}\"",
     "lint:json": "prettier '*.json'",
     "format:ts": "yarn lint:ts --fix",

@@ -1,3 +1,4 @@
+import "../apps/users/dist/static/css/app.css";
 import { Link, Route, BrowserRouter as Router, Switch } from "react-router-dom";
 import { mountTo } from "../apps/users/dist/app.js";
 import React, { useEffect } from "react";
